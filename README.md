@@ -3,6 +3,9 @@ This is a work-in-progress project to automate group syncing between various ser
 
 Once this project is finished, it will run on a cronjob. It should look at LDAP state and add users to services based on that. As a failsafe, it will never remove users. Instead, if a user needs to be removed from a group, we will send an email that should be manually handled.
 
+# Running
+Run `ldapsync/ldapsync.py -n` for testing. The `-n` flag enables "dry-run" mode where no changes will actually be made. To run this for real, remove the `-n` flag.
+
 # Groups
 ## ocfstaff
 ocfstaff is volunteer staff, and have limited access to OCF infrastructure. Most staff priveleges are granted "automatically," but some access needs to be granted via this script. They should be added to RT and given access to the Google Drive.
