@@ -50,8 +50,7 @@ class GAppsAdminAPI:
 
     def list_members(self, list_name):
         """List all the OCF members (@ocf.berkeley.edu emails) in a GApps
-        mailing list. Strips email addresses, so this only returns email
-        addresses.
+        mailing list. Strips email addresses, so this only returns usernames.
         Ignores non-ocf.berkeley.edu emails and ocfbot@ocf.berkeley.edu.
         """
         response = self.groupadmin.members().list(groupKey=list_name).execute()
