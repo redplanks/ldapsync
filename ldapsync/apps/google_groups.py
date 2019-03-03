@@ -18,11 +18,15 @@ How to do alerting? do we want to be silent on success? or do stderr for some th
 How to store the sync pairs? Config file or command line args?
 """
 
+import logging
+
 from google.oauth2 import service_account
 import googleapiclient.discovery
 
 from ocflib.account.utils import list_staff
 
+
+SERVICE_ACCOUNT_FILE_PATH = 'ocf-ldap-sync-5ad44e88518c.json'
 
 SYNC_PAIRS = [
     ('ocfofficers', 'officers@ocf.berkeley.edu'),
@@ -72,7 +76,7 @@ class GAppsAdminAPI:
 
 
 def sync(dry_run):
-    admin_api = GAppsAdminAPI('ocf-ldap-sync-5ad44e88518c.json')
+    admin_api = GAppsAdminAPI(SERVICE_ACCOUNT_FILE_PATH)
     for groupname, mailname in SYNC_PAIRS:
         group = set(list_staff(group=groupname))
         mailing_list = set(admin_api.list_members(mailname))
@@ -81,7 +85,7 @@ def sync(dry_run):
         missing = mailing_list - group
 
         if missing:
-            print(
+            logging.warning(
                 'The following users are in the {mailname} mailing list but '
                 'are not in the {groupname} LDAP group:\n'.format(
                     mailname=mailname,
@@ -89,12 +93,10 @@ def sync(dry_run):
                 )
             )
             for m in missing:
-                print(m)
-
-            print()
+                logging.warning(m)
 
         for username in to_add:
             if not dry_run:
                 add_to_group(username, mailname)
             else:
-                print('Add {} to group {}'.format(username, mailname))
+                logging.info('Adding {} to group {}'.format(username, mailname))
