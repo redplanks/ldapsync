@@ -98,6 +98,3 @@ def sync(dry_run):
                 add_to_group(username, mailname)
             else:
                 print('Add {} to group {}'.format(username, mailname))
-    
-if __name__ == '__main__':
-    main()
