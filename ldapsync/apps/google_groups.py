@@ -26,7 +26,7 @@ import googleapiclient.discovery
 from ocflib.account.utils import list_staff
 
 
-SERVICE_ACCOUNT_FILE_PATH = 'ocf-ldap-sync-5ad44e88518c.json'
+SERVICE_ACCOUNT_FILE_PATH = 'ocf-ldap-sync-api-key.json'
 
 SYNC_PAIRS = [
     ('ocfofficers', 'officers@ocf.berkeley.edu'),
