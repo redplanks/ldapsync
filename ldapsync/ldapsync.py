@@ -20,6 +20,7 @@ def main():
     parser.add_argument(
         '--log-file',
         '-l',
+        default=None,
         help='Log any changes and any errors to the specified file.'
     )
 
@@ -29,7 +30,7 @@ def main():
     # Always log to STDOUT.
     logging_handlers.append(logging.StreamHandler(stream=sys.stdout))
 
-    if not args.log_file:
+    if args.log_file is not None:
         logging_handlers.append(logging.FileHandler(args.log_file))
 
     logging.basicConfig(
