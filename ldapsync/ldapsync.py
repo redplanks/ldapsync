@@ -44,8 +44,8 @@ def main():
             mod.sync(args.dry_run)
         except Exception as e:
             logging.exception("Exception caught: ")
-            mail.send_problem_report(f"An exception occurred in ldapsync: \n\n
-                    {traceback.format_exc()}")
+            mail.send_problem_report("An exception occurred in ldapsync: \n\n{}".format(
+                traceback.format_exc()))
 
 if __name__ == '__main__':
     main()
