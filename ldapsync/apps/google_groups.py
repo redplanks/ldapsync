@@ -98,5 +98,4 @@ def sync(dry_run):
         for username in to_add:
             if not dry_run:
                 add_to_group(username, mailname)
-            else:
-                logging.info('Adding {} to group {}'.format(username, mailname))
+            logging.info('Adding {} to group {}'.format(username, mailname))
