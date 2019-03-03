@@ -29,7 +29,7 @@ def main():
     # Always log to STDOUT.
     logging_handlers.append(logging.StreamHandler(stream=sys.stdout))
 
-    if (!args.log_file):
+    if not args.log_file:
         logging_handlers.append(logging.FileHandler(args.log_file))
 
     logging.basicConfig(

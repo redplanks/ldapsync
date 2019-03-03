@@ -6,9 +6,11 @@ Once this project is finished, it will run on a cronjob. It should look at LDAP 
 # Running
 Run `ldapsync/ldapsync.py -n` for testing. The `-n` flag enables "dry-run" mode where no changes will actually be made. To run this for real, remove the `-n` flag.
 
+The `--log-file` or `-l` optional flag logs everything (successful syncs, errors, and exceptions) to the given log file.
+
 # Groups
 ## ocfstaff
-ocfstaff is volunteer staff, and have limited access to OCF infrastructure. Most staff priveleges are granted "automatically," but some access needs to be granted via this script. They should be added to RT and given access to the Google Drive.
+ocfstaff is volunteer staff, and have limited access to OCF infrastructure. Most staff privileges are granted "automatically," but some access needs to be granted via this script. They should be added to RT and given access to the Google Drive.
 
 ## opstaff
 Opstaff are paid front-desk staff. They should be added to the opstaff mailing list and GDrive.
@@ -17,7 +19,7 @@ Opstaff are paid front-desk staff. They should be added to the opstaff mailing l
 Officers should be put on a Google mailing list for "external" OCF communications. They also have access to a Google Drive.
 
 ## ocfroot
-Root staffers have full access to OCF infra. They should be given admin priveleges on all services, like Discourse and RT.
+Root staffers have full access to OCF infra. They should be given admin privileges on all services, like Discourse and RT.
 
 # Services
 ## Google Admin (mailing list groups)
