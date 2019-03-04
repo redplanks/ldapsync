@@ -20,20 +20,25 @@ class LDAPSyncApp(abc.ABC):
             default=None,
             help='Log any changes and any errors to the specified file.'
         )
-        self.args = self.arg_parser.parse_args()
+        self.args = self.arg_parser.parse_known_args()[0]
 
-        # Set global logger format.
-        logging.basicConfig(format='%(asctime)s:%(levelname)s:%(module)s:%(message)s')
+        # Set logger format.
+        # logging.basicConfig(format='%(asctime)s:%(levelname)s:%(module)s:%(message)s')
+        formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(module)s:%(message)s')
 
         # Set logging options for the current module only.
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
 
         # Always log to STDOUT.
-        self.logger.addHandler(logging.StreamHandler(stream=sys.stdout))
+        stream_handler = logging.StreamHandler(stream=sys.stdout)
+        stream_handler.setFormatter(formatter)
+        self.logger.addHandler(stream_handler)
 
         if self.args.log_file is not None:
-            self.logger.addHandler(logging.FileHandler(self.args.log_file))
+            file_handler = logging.FileHandler(self.args.log_file)
+            file_handler.setFormatter(formatter)
+            self.logger.addHandler(file_handler)
 
 
     @abc.abstractmethod
