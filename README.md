@@ -4,9 +4,19 @@ This is a work-in-progress project to automate group syncing between various ser
 Once this project is finished, it will run on a cronjob. It should look at LDAP state and add users to services based on that. As a failsafe, it will never remove users. Instead, if a user needs to be removed from a group, we will send an email that should be manually handled.
 
 # Running
-Run `ldapsync/ldapsync.py -n` for testing. The `-n` flag enables "dry-run" mode where no changes will actually be made. To run this for real, remove the `-n` flag.
 
-The `--log-file` or `-l` optional flag logs everything (successful syncs, errors, and exceptions) to the given log file.
+Each script that inherits from the abstract base class `LDAPSyncApp` should be run as a standalone script.
+Some flags to the script are defined in `LDAPSyncApp`, while others should be added as needed.
+
+## Common Flags
+The `-n` flag enables "dry-run" mode where no changes will actually be made. To run this for real, remove the `-n` flag.
+
+The `--log-file` or `-l` flag logs everything (successful syncs, errors, and exceptions) to the given log file.
+
+## App-specific Flags
+
+`google_groups.py` takes in one additional required argument: the path to the Google Cloud service account private key,
+a JSON file.
 
 # Groups
 ## ocfstaff
