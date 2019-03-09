@@ -6,7 +6,7 @@ import sys
 class LDAPSyncApp(abc.ABC):
     def __init__(self):
         # Add required flags for all apps. Add new ones in child classes,
-        # but don't forget to run parse_args() again.
+        # but don't forget to run parse_known_args() again.
         self.arg_parser = argparse.ArgumentParser(description=__doc__)
         self.arg_parser.add_argument(
             '--dry-run',
@@ -20,6 +20,8 @@ class LDAPSyncApp(abc.ABC):
             default=None,
             help='Log any changes and any errors to the specified file.'
         )
+        # parse_known_args() gives a tuple; we only care about parsed args,
+        # which is the first element.
         self.args = self.arg_parser.parse_known_args()[0]
 
         # Set logger format.
