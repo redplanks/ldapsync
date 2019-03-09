@@ -20,6 +20,18 @@ class LDAPSyncApp(abc.ABC):
             default=None,
             help='Log any changes and any errors to the specified file.'
         )
+        self.arg_parser.add_argument(
+            '--log-level',
+            choices=(
+                'CRITICAL',
+                'ERROR',
+                'WARNING',
+                'INFO',
+                'DEBUG',
+            ),
+            default='WARNING',
+            help='Logging level to set for app.',
+        )
         # parse_known_args() gives a tuple; we only care about parsed args,
         # which is the first element.
         self.args = self.arg_parser.parse_known_args()[0]
@@ -30,7 +42,7 @@ class LDAPSyncApp(abc.ABC):
 
         # Set logging options for the current module only.
         self.logger = logging.getLogger(__name__)
-        self.logger.setLevel(logging.INFO)
+        self.logger.setLevel(logging.getLevelName(self.args.log_level))
 
         # Always log to STDOUT.
         stream_handler = logging.StreamHandler(stream=sys.stdout)
