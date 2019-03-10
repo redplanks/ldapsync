@@ -4,6 +4,9 @@ import logging
 import logging.handlers
 import sys
 
+import emailbufferinghandler
+
+
 class LDAPSyncApp(abc.ABC):
     def __init__(self):
         # Add required flags for all apps. Add new ones in child classes,
@@ -38,7 +41,6 @@ class LDAPSyncApp(abc.ABC):
         self.args = self.arg_parser.parse_known_args()[0]
 
         # Set logger format.
-        # logging.basicConfig(format='%(asctime)s:%(levelname)s:%(module)s:%(message)s')
         formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(module)s:%(message)s')
 
         # Set logging options for the current module only.
@@ -49,6 +51,12 @@ class LDAPSyncApp(abc.ABC):
         stream_handler = logging.StreamHandler(stream=sys.stdout)
         stream_handler.setFormatter(formatter)
         self.logger.addHandler(stream_handler)
+
+        # Log everything to an email buffer, so we can email all log messages
+        # at the end of a sync.
+        email_buffering_handler = emailbufferinghandler.EmailBufferingHandler()
+        email_buffering_handler.setFormatter(formatter)
+        self.logger.addHandler(email_buffering_handler)
 
         if self.args.log_file is not None:
             file_handler = logging.handlers.WatchedFileHandler(self.args.log_file)
