@@ -1,4 +1,5 @@
 import logging
+import traceback
 
 from google.oauth2 import service_account
 import googleapiclient.discovery
@@ -86,6 +87,7 @@ class GoogleGroups(LDAPSyncApp):
     def sync(self):
         try:
             admin_api = GAppsAdminAPI(self.args.service_acct_json_path)
+
             for groupname, mailname in SYNC_PAIRS:
                 group = set(list_staff(group=groupname))
                 mailing_list = set(admin_api.list_members(mailname))
@@ -94,13 +96,10 @@ class GoogleGroups(LDAPSyncApp):
                 missing = mailing_list - group
 
                 if missing:
-                    self.logger.warning(
-                        'The following users are in the {mailname} mailing list but '
-                        'are not in the {groupname} LDAP group:'.format(
-                            mailname=mailname,
-                            groupname=groupname,
-                        )
-                    )
+                    missing_header = 'The following users are in the {mailname} mailing list but are not in the {groupname} LDAP group:'.format(
+                                         mailname=mailname,
+                                         groupname=groupname)
+                    self.logger.warning(missing_header)
                     for m in missing:
                         self.logger.warning(m)
 
@@ -108,10 +107,10 @@ class GoogleGroups(LDAPSyncApp):
                     if not self.args.dry_run:
                         admin_api.add_to_group(username, mailname)
                     self.logger.info('Adding {} to group {}'.format(username, mailname))
+
         except Exception as e:
-            self.logger.exception("Exception caught: {}".format(e.traceback.format_exc()))
-            mail.send_problem_report("An exception occurred in ldapsync: \n\n{}".format(
-                e.traceback.format_exc()))
+            self.logger.exception("Exception caught: {}".format(e))
+            mail.send_problem_report("An exception occurred in ldapsync: \n\n{}".format(e))
 
 if __name__ == '__main__':
     google_groups_app = GoogleGroups()
