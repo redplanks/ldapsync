@@ -1,6 +1,7 @@
 import abc
 import argparse
 import logging
+import logging.handlers
 import sys
 
 class LDAPSyncApp(abc.ABC):
@@ -50,7 +51,7 @@ class LDAPSyncApp(abc.ABC):
         self.logger.addHandler(stream_handler)
 
         if self.args.log_file is not None:
-            file_handler = logging.FileHandler(self.args.log_file)
+            file_handler = logging.handlers.WatchedFileHandler(self.args.log_file)
             file_handler.setFormatter(formatter)
             self.logger.addHandler(file_handler)
 
