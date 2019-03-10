@@ -34,8 +34,14 @@ class LDAPSyncApp(abc.ABC):
                 'DEBUG',
             ),
             default='WARNING',
-            help='Logging level to set for app.',
+            help='Logging level to set for app.'
         )
+        self.arg_parser.add_argument(
+            '--log-to-email',
+            action='store_true',
+            help='Send all log messages as an ocflib problem report email.'
+        )
+
         # parse_known_args() gives a tuple; we only care about parsed args,
         # which is the first element.
         self.args = self.arg_parser.parse_known_args()[0]
@@ -56,7 +62,8 @@ class LDAPSyncApp(abc.ABC):
         # at the end of a sync.
         self.email_buffering_handler = emailbufferinghandler.EmailBufferingHandler()
         self.email_buffering_handler.setFormatter(formatter)
-        self.logger.addHandler(self.email_buffering_handler)
+        if self.args.log_to_email:
+            self.logger.addHandler(self.email_buffering_handler)
 
         if self.args.log_file is not None:
             file_handler = logging.handlers.WatchedFileHandler(self.args.log_file)
