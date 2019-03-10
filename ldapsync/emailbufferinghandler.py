@@ -17,7 +17,8 @@ class EmailBufferingHandler(logging.handlers.BufferingHandler):
         mail_string = ""
         for log_record in self.buffer:
             mail_string += log_record.getMessage() + "\n"
-        mail.send_problem_report(mail_string)
+        if mail_string != "":
+            mail.send_problem_report(mail_string)
 
         super().flush()
 
