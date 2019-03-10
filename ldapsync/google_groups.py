@@ -99,6 +99,9 @@ class GoogleGroups(LDAPSyncApp):
                                          mailname=mailname,
                                          groupname=groupname)
                     self.logger.warning(missing_header)
+                    # Alphabetically sort, so every email is the same
+                    # if nothing changes about the list.
+                    missing = sorted(missing)
                     for m in missing:
                         self.logger.warning(m)
 
