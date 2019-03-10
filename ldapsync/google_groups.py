@@ -1,5 +1,4 @@
 import logging
-import traceback
 
 from google.oauth2 import service_account
 import googleapiclient.discovery
