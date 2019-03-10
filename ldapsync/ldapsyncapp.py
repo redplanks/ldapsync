@@ -54,9 +54,9 @@ class LDAPSyncApp(abc.ABC):
 
         # Log everything to an email buffer, so we can email all log messages
         # at the end of a sync.
-        email_buffering_handler = emailbufferinghandler.EmailBufferingHandler()
-        email_buffering_handler.setFormatter(formatter)
-        self.logger.addHandler(email_buffering_handler)
+        self.email_buffering_handler = emailbufferinghandler.EmailBufferingHandler()
+        self.email_buffering_handler.setFormatter(formatter)
+        self.logger.addHandler(self.email_buffering_handler)
 
         if self.args.log_file is not None:
             file_handler = logging.handlers.WatchedFileHandler(self.args.log_file)

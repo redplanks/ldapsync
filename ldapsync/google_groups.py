@@ -108,6 +108,9 @@ class GoogleGroups(LDAPSyncApp):
                         admin_api.add_to_group(username, mailname)
                     self.logger.info('Adding {} to group {}'.format(username, mailname))
 
+            # Send an ocflib problem report email with all log messages.
+            self.email_buffering_handler.flush()
+
         except Exception as e:
             self.logger.exception("Exception caught: {}".format(e))
             mail.send_problem_report("An exception occurred in ldapsync: \n\n{}".format(e))
