@@ -1,0 +1,45 @@
+exclude: ^vendor/
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks.git
+    rev: v2.1.0
+    hooks:
+    -   id: check-added-large-files
+    -   id: check-docstring-first
+    -   id: check-executables-have-shebangs
+    -   id: check-json
+    -   id: check-merge-conflict
+    -   id: check-xml
+    -   id: check-yaml
+    -   id: debug-statements
+    -   id: detect-private-key
+        exclude: ^(tests/account/creation_test.py)$
+    -   id: double-quote-string-fixer
+    -   id: end-of-file-fixer
+    -   id: file-contents-sorter
+    -   id: mixed-line-ending
+    -   id: name-tests-test
+    -   id: requirements-txt-fixer
+    -   id: sort-simple-yaml
+    -   id: trailing-whitespace
+-   repo: https://github.com/pre-commit/mirrors-autopep8
+    rev: v1.4.3
+    hooks:
+    -   id: autopep8
+-   repo: https://gitlab.com/pycqa/flake8
+    rev: 3.7.7
+    hooks:
+    - id: flake8
+      language_version: python3.5
+-   repo: https://github.com/asottile/reorder_python_imports.git
+    rev: v1.4.0
+    hooks:
+    -   id: reorder-python-imports
+-   repo: https://github.com/asottile/pyupgrade.git
+    rev: v1.12.0
+    hooks:
+    -   id: pyupgrade
+        args: ['--py3-plus']
+-   repo: https://github.com/Lucas-C/pre-commit-hooks.git
+    rev: v1.1.6
+    hooks:
+    -   id: remove-tabs
