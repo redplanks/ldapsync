@@ -4,6 +4,9 @@ import logging
 import logging.handlers
 import sys
 
+from ocflib.account.utils import list_staff
+from ocflib.misc import mail
+
 
 class DestinationService(abc.ABC):
     """
@@ -33,6 +36,9 @@ class DestinationService(abc.ABC):
 
 
 class LDAPSyncApp(abc.ABC):
+
+    SYNC_PAIRS = None
+
     def __init__(self):
         # Add required flags for all apps. Add new ones in child classes,
         # but don't forget to run parse_known_args() again.
@@ -83,17 +89,17 @@ class LDAPSyncApp(abc.ABC):
             file_handler.setFormatter(formatter)
             self.logger.addHandler(file_handler)
 
-    @abc.abstractmethod
     @property
+    @abc.abstractmethod
     def dest_service(self):
         """Return the destination service to sync to."""
         pass
 
     def sync(self):
         try:
-            for ldap_group, dest_group in SYNC_PAIRS:
+            for ldap_group, dest_group in self.SYNC_PAIRS:
                 ldap_members = set(list_staff(group=ldap_group))
-                dest_members = set(self.dest_service.list_members(dest_group))
+                dest_members = set(self.dest_service().list_members(dest_group))
 
                 to_add = ldap_members - dest_members
                 missing = dest_members - ldap_members
@@ -108,11 +114,8 @@ class LDAPSyncApp(abc.ABC):
 
                 for username in to_add:
                     if not self.args.dry_run:
-                        self.dest_service.add_to_group(username, dest_group)
+                        self.dest_service().add_to_group(username, dest_group)
                     self.logger.info('Adding {} to group {}'.format(username, dest_group))
-
-            # Send an ocflib problem report email with all log messages.
-            self.email_buffering_handler.flush()
 
         except Exception as e:
             self.logger.exception("Exception caught: {}".format(e))

@@ -1,10 +1,5 @@
-import logging
-
 from google.oauth2 import service_account
 import googleapiclient.discovery
-
-from ocflib.account.utils import list_staff
-from ocflib.misc import mail
 
 import ldapsyncapp
 """LDAP -> GApps Group (mailing list) one-way sync.
@@ -26,11 +21,6 @@ Questions:
 How to do alerting? do we want to be silent on success? or do stderr for some things?
 How to store the sync pairs? Config file or command line args?
 """
-
-SYNC_PAIRS = [
-    ('ocfofficers', 'officers@ocf.berkeley.edu'),
-]
-
 
 class GAppsAdminAPI(ldapsyncapp.DestinationService):
     def __init__(self, service_account_file_path):
@@ -75,6 +65,11 @@ class GAppsAdminAPI(ldapsyncapp.DestinationService):
 
 
 class GoogleGroups(ldapsyncapp.LDAPSyncApp):
+
+    SYNC_PAIRS = [
+        ('ocfofficers', 'officers@ocf.berkeley.edu'),
+    ]
+
     def __init__(self):
         super().__init__()
         # Add argument for the Google Apps service account JSON file.
@@ -83,7 +78,7 @@ class GoogleGroups(ldapsyncapp.LDAPSyncApp):
             help='Absolute path to GApps service account file.')
         self.args = self.arg_parser.parse_known_args()[0]
 
-        self.__gapps_admin_api = GAppsAdminAPI()
+        self.__gapps_admin_api = GAppsAdminAPI(self.args.service_acct_json_path)
 
     def dest_service(self):
         return self.__gapps_admin_api
