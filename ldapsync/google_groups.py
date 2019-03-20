@@ -6,7 +6,7 @@ import googleapiclient.discovery
 from ocflib.account.utils import list_staff
 from ocflib.misc import mail
 
-from ldapsyncapp import LDAPSyncApp
+import ldapsyncapp
 """LDAP -> GApps Group (mailing list) one-way sync.
 
 This script adds users in an LDAP group to a Google Group.
@@ -32,7 +32,7 @@ SYNC_PAIRS = [
 ]
 
 
-class GAppsAdminAPI:
+class GAppsAdminAPI(ldapsyncapp.DestinationService):
     def __init__(self, service_account_file_path):
         scopes = [
             'https://www.googleapis.com/auth/admin.directory.group.member',
@@ -51,12 +51,12 @@ class GAppsAdminAPI:
             credentials=delegated_credentials,
         )
 
-    def list_members(self, list_name):
+    def list_members(self, destination_group):
         """List all the OCF members (@ocf.berkeley.edu emails) in a GApps
         mailing list. Strips email addresses, so this only returns usernames.
         Ignores non-ocf.berkeley.edu emails and ocfbot@ocf.berkeley.edu.
         """
-        response = self.groupadmin.members().list(groupKey=list_name).execute()
+        response = self.groupadmin.members().list(groupKey=destination_group).execute()
         emails = (m['email'].split('@') for m in response['members'])
 
         return [
@@ -66,15 +66,15 @@ class GAppsAdminAPI:
             if username != 'ocfbot'
         ]
 
-    def add_to_group(self, usernames, list_name):
+    def add_to_group(self, usernames, destination_group):
         for username in usernames:
             self.groupadmin.members().insert(
-                groupKey=list_name,
+                groupKey=destination_group,
                 body={'email': username + '@ocf.berkeley.edu'},
             ).execute()
 
 
-class GoogleGroups(LDAPSyncApp):
+class GoogleGroups(ldapsyncapp.LDAPSyncApp):
     def __init__(self):
         super().__init__()
         # Add argument for the Google Apps service account JSON file.
