@@ -4,6 +4,34 @@ import logging
 import logging.handlers
 import sys
 
+
+class DestinationService(abc.ABC):
+    """
+    Abstract class for services that LDAPSync will sync to LDAP groups, such
+    as Google Groups, RT, and Discourse.
+
+    The two abstract methods list_members() and add_to_group() must be
+    implemented.
+    """
+
+    @abc.abstractmethod
+    def list_members(self, destination_group):
+        """
+        This method must list the OCF usernames of all OCF members in a
+        destination group, such as a Google Groups group, or RT admin list.
+        This method should also ignore bot accounts, such as ocfbot.
+        """
+        pass
+
+    @abc.abstractmethod
+    def add_to_group(self, username, destination_group):
+        """
+        This method must add the account associated with the OCF username
+        provided to the destination group.
+        """
+        pass
+
+
 class LDAPSyncApp(abc.ABC):
     def __init__(self):
         # Add required flags for all apps. Add new ones in child classes,
