@@ -13,6 +13,8 @@ The `-n` flag enables "dry-run" mode where no changes will actually be made. To 
 
 The `--log-file` or `-l` flag logs everything (successful syncs, errors, and exceptions) to the given log file.
 
+The `--log-level` flag sets the log level; any messages below the given log level will be ignored. Defaults to WARNING.
+
 ## App-specific Flags
 
 `google_groups.py` takes in one additional required argument: the path to the Google Cloud service account private key,
