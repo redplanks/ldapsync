@@ -89,6 +89,31 @@ class LDAPSyncApp(abc.ABC):
         """Return the destination service to sync to."""
         pass
 
-    @abc.abstractmethod
     def sync(self):
-        pass
+        try:
+            for ldap_group, dest_group in SYNC_PAIRS:
+                ldap_members = set(list_staff(group=ldap_group))
+                dest_members = set(self.dest_service.list_members(dest_group))
+
+                to_add = ldap_members - dest_members
+                missing = dest_members - ldap_members
+
+                if missing:
+                    missing_header = 'The following users are in the {dest} destination group but are not in the {ldap} LDAP group:'.format(
+                                         dest=dest_group,
+                                         ldap=ldap_group)
+                    self.logger.warning(missing_header)
+                    for m in missing:
+                        self.logger.warning(m)
+
+                for username in to_add:
+                    if not self.args.dry_run:
+                        self.dest_service.add_to_group(username, dest_group)
+                    self.logger.info('Adding {} to group {}'.format(username, dest_group))
+
+            # Send an ocflib problem report email with all log messages.
+            self.email_buffering_handler.flush()
+
+        except Exception as e:
+            self.logger.exception("Exception caught: {}".format(e))
+            mail.send_problem_report("An exception occurred in ldapsync: \n\n{}".format(e))
