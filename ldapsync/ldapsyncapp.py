@@ -83,6 +83,11 @@ class LDAPSyncApp(abc.ABC):
             file_handler.setFormatter(formatter)
             self.logger.addHandler(file_handler)
 
+    @abc.abstractmethod
+    @property
+    def dest_service(self):
+        """Return the destination service to sync to."""
+        pass
 
     @abc.abstractmethod
     def sync(self):

@@ -83,6 +83,11 @@ class GoogleGroups(ldapsyncapp.LDAPSyncApp):
             help='Absolute path to GApps service account file.')
         self.args = self.arg_parser.parse_known_args()[0]
 
+        self.__gapps_admin_api = GAppsAdminAPI()
+
+    def dest_service(self):
+        return self.__gapps_admin_api
+
     def sync(self):
         try:
             admin_api = GAppsAdminAPI(self.args.service_acct_json_path)
