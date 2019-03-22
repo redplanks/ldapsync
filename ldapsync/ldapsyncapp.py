@@ -1,6 +1,5 @@
 import abc
 import argparse
-import logging
 import logging.handlers
 import sys
 
@@ -73,7 +72,8 @@ class LDAPSyncApp(abc.ABC):
 
         # Set logger format.
         # logging.basicConfig(format='%(asctime)s:%(levelname)s:%(module)s:%(message)s')
-        formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(module)s:%(message)s')
+        formatter = logging.Formatter(
+            '%(asctime)s:%(levelname)s:%(module)s:%(message)s')
 
         # Set logging options for the current module only.
         self.logger = logging.getLogger(__name__)
@@ -85,7 +85,8 @@ class LDAPSyncApp(abc.ABC):
         self.logger.addHandler(stream_handler)
 
         if self.args.log_file is not None:
-            file_handler = logging.handlers.WatchedFileHandler(self.args.log_file)
+            file_handler = logging.handlers.WatchedFileHandler(
+                self.args.log_file)
             file_handler.setFormatter(formatter)
             self.logger.addHandler(file_handler)
 
@@ -99,15 +100,18 @@ class LDAPSyncApp(abc.ABC):
         try:
             for ldap_group, dest_group in self.SYNC_PAIRS:
                 ldap_members = set(list_staff(group=ldap_group))
-                dest_members = set(self.dest_service().list_members(dest_group))
+                dest_members = set(
+                    self.dest_service().list_members(dest_group))
 
                 to_add = ldap_members - dest_members
                 missing = dest_members - ldap_members
 
                 if missing:
-                    missing_header = 'The following users are in the {dest} destination group but are not in the {ldap} LDAP group:'.format(
-                                         dest=dest_group,
-                                         ldap=ldap_group)
+                    missing_header = '''The following users are in the {dest}
+                            destination group but are not in the {ldap}
+                            LDAP group:'''.format(
+                        dest=dest_group,
+                        ldap=ldap_group)
                     self.logger.warning(missing_header)
                     for m in missing:
                         self.logger.warning(m)
@@ -115,8 +119,11 @@ class LDAPSyncApp(abc.ABC):
                 for username in to_add:
                     if not self.args.dry_run:
                         self.dest_service().add_to_group(username, dest_group)
-                    self.logger.info('Adding {} to group {}'.format(username, dest_group))
+                    self.logger.info(
+                        'Adding {} to group {}'.format(username, dest_group))
 
         except Exception as e:
-            self.logger.exception("Exception caught: {}".format(e))
-            mail.send_problem_report("An exception occurred in ldapsync: \n\n{}".format(e))
+            self.logger.exception('Exception caught: {}'.format(e))
+            if not self.args.dry_run:
+                mail.send_problem_report(
+                    'An exception occurred in ldapsync: \n\n{}'.format(e))
