@@ -4,7 +4,6 @@ repos:
     rev: v2.1.0
     hooks:
     -   id: check-added-large-files
-    -   id: check-docstring-first
     -   id: check-executables-have-shebangs
     -   id: check-json
     -   id: check-merge-conflict
