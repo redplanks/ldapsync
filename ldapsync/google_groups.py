@@ -1,7 +1,6 @@
-from google.oauth2 import service_account
 import googleapiclient.discovery
-
 import ldapsyncapp
+from google.oauth2 import service_account
 """LDAP -> GApps Group (mailing list) one-way sync.
 
 This script adds users in an LDAP group to a Google Group.
@@ -18,9 +17,11 @@ https://developers.google.com/admin-sdk/directory/v1/reference/members/insert
 
 """
 Questions:
-How to do alerting? do we want to be silent on success? or do stderr for some things?
+How to do alerting? do we want to be silent on success? or do stderr
+for some things?
 How to store the sync pairs? Config file or command line args?
 """
+
 
 class GAppsAdminAPI(ldapsyncapp.DestinationService):
     def __init__(self, service_account_file_path):
@@ -46,7 +47,8 @@ class GAppsAdminAPI(ldapsyncapp.DestinationService):
         mailing list. Strips email addresses, so this only returns usernames.
         Ignores non-ocf.berkeley.edu emails and ocfbot@ocf.berkeley.edu.
         """
-        response = self.groupadmin.members().list(groupKey=destination_group).execute()
+        response = self.groupadmin.members().list(
+            groupKey=destination_group).execute()
         emails = (m['email'].split('@') for m in response['members'])
 
         return [
@@ -78,10 +80,10 @@ class GoogleGroups(ldapsyncapp.LDAPSyncApp):
             help='Absolute path to GApps service account file.')
         self.args = self.arg_parser.parse_known_args()[0]
 
-        self.__gapps_admin_api = GAppsAdminAPI(self.args.service_acct_json_path)
+        self._gapps_admin_api = GAppsAdminAPI(self.args.service_acct_json_path)
 
     def dest_service(self):
-        return self.__gapps_admin_api
+        return self._gapps_admin_api
 
 
 if __name__ == '__main__':
