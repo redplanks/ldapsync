@@ -1,7 +1,7 @@
 BIN := venv/bin
 
 DOCKER_REVISION ?= testing-$(USER)
-DOCKER_TAG = docker-push.ocf.berkeley.edu/templates:$(DOCKER_REVISION)
+DOCKER_TAG = docker-push.ocf.berkeley.edu/ldapsync:$(DOCKER_REVISION)
 
 
 .PHONY: cook-image
