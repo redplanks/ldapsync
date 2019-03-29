@@ -1,0 +1,29 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: ldapsync
+spec:
+  schedule: "*/30 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: ldapsync
+              image: "docker.ocf.berkeley.edu/ldapsync:<%= version %>"
+              command: ["/bin/sh", "-c"]
+              args: >
+                - python3 /opt/ldapsync/google_groups.py
+                  --log-level=WARNING
+                  /opt/share/kubernetes/secrets/ldapsync/api-key-gapps.json
+                  | chronic -e
+                  | /opt/ldapsync/email_ldapsync_problem;
+              volumeMounts:
+                - mountPath: /opt/share/secrets/ldapsync
+                  name: secrets
+          volumes:
+            - name: secrets
+              hostPath:
+                path: /opt/share/kubernetes/secrets/ldapsync
+                type: Directory
+          restartPolicy: Never
