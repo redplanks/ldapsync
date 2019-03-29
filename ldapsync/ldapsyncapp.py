@@ -78,8 +78,8 @@ class LDAPSyncApp(abc.ABC):
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.getLevelName(self.args.log_level))
 
-        # Always log to STDOUT.
-        stream_handler = logging.StreamHandler(stream=sys.stdout)
+        # Always log to STDERR.
+        stream_handler = logging.StreamHandler(stream=sys.stderr)
         stream_handler.setFormatter(formatter)
         self.logger.addHandler(stream_handler)
 
