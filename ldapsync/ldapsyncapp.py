@@ -4,7 +4,6 @@ import logging.handlers
 import sys
 
 from ocflib.account.utils import list_staff
-from ocflib.misc import mail
 
 
 class DestinationService(abc.ABC):
@@ -124,6 +123,3 @@ class LDAPSyncApp(abc.ABC):
 
         except Exception as e:
             self.logger.exception('Exception caught: {}'.format(e))
-            if not self.args.dry_run:
-                mail.send_problem_report(
-                    'An exception occurred in ldapsync: \n\n{}'.format(e))
