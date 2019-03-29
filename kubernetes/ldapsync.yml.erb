@@ -13,10 +13,9 @@ spec:
               image: "docker.ocf.berkeley.edu/ldapsync:<%= version %>"
               command: ["/bin/sh", "-c"]
               args: >
-                - python3 /opt/ldapsync/google_groups.py
+                - chronic -e python3 /opt/ldapsync/google_groups.py
                   --log-level=WARNING
                   /opt/share/kubernetes/secrets/ldapsync/api-key-gapps.json
-                  | chronic -e
                   | /opt/ldapsync/email_ldapsync_problem;
               volumeMounts:
                 - mountPath: /opt/share/secrets/ldapsync
