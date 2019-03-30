@@ -15,7 +15,7 @@ spec:
               args:
                 - chronic -e python3 /opt/ldapsync/google_groups.py
                   --log-level=WARNING
-                  /opt/share/kubernetes/secrets/ldapsync/api-key-gapps.json
+                  /opt/share/secrets/ldapsync/api-key-gapps.json
                   2>&1 | /opt/ldapsync/email_ldapsync_problem;
               resources:
                 limits:
