@@ -5,10 +5,11 @@ from ocflib.misc import mail
 
 
 if __name__ == '__main__':
-    if sys.stdin.read():
+    stdin_str = sys.stdin.read()
+    if stdin_str:
         mail.send_mail(
             mail.MAIL_ROOT,
             '[ldapsync] Problem report',
-            sys.stdin.read(),
+            stdin_str,
             sender='ldapsync <root@ocf.berkeley.edu>',
         )
