@@ -6,7 +6,6 @@ RUN apt-get update \
         cracklib-runtime \
         libcrack2 \
         libcrack2-dev \
-        moreutils \
         python3 \
         python3-dev \
         python3-setuptools \

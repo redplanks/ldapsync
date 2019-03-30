@@ -13,7 +13,7 @@ spec:
               image: "docker.ocf.berkeley.edu/ldapsync:<%= version %>"
               command: ["/bin/sh", "-c"]
               args:
-                - chronic -e python3 /opt/ldapsync/google_groups.py
+                - python3 /opt/ldapsync/google_groups.py
                   --log-level=WARNING
                   --log-file=/var/log/ldapsync.log
                   /opt/share/secrets/ldapsync/api-key-gapps.json;
