@@ -17,7 +17,7 @@ spec:
                   --log-level=WARNING
                   --log-file=/var/log/ldapsync.log
                   /opt/share/secrets/ldapsync/api-key-gapps.json;
-                  cat /var/log/ldapsync.log | /opt/ldapsync/email_ldapsync_problem;
+                  /opt/ldapsync/email_ldapsync_problem /var/log/ldapsync.log;
               resources:
                 limits:
                   memory: 512Mi
