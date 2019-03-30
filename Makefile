@@ -32,3 +32,4 @@ clean:
 .PHONY: update-requirements
 update-requirements: venv
 	$(BIN)/upgrade-requirements
+	sed -i 's/^ocflib==.*/ocflib/' requirements.txt

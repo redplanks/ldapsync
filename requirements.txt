@@ -13,7 +13,7 @@ idna==2.8
 Jinja2==2.10
 ldap3==2.6
 MarkupSafe==1.1.1
-ocflib==2019.3.20.17.5
+ocflib
 pexpect==4.6.0
 ply==3.11
 ptyprocess==0.6.0
