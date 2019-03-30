@@ -15,8 +15,9 @@ spec:
               args:
                 - chronic -e python3 /opt/ldapsync/google_groups.py
                   --log-level=WARNING
-                  /opt/share/secrets/ldapsync/api-key-gapps.json
-                  2>&1 | /opt/ldapsync/email_ldapsync_problem;
+                  --log-file=/var/log/ldapsync.log
+                  /opt/share/secrets/ldapsync/api-key-gapps.json;
+                  cat /var/log/ldapsync.log | /opt/ldapsync/email_ldapsync_problem;
               resources:
                 limits:
                   memory: 512Mi
