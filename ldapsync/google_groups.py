@@ -58,12 +58,11 @@ class GAppsAdminAPI(ldapsyncapp.DestinationService):
             if username != 'ocfbot'
         ]
 
-    def add_to_group(self, usernames, destination_group):
-        for username in usernames:
-            self.groupadmin.members().insert(
-                groupKey=destination_group,
-                body={'email': username + '@ocf.berkeley.edu'},
-            ).execute()
+    def add_to_group(self, username, destination_group):
+        self.groupadmin.members().insert(
+            groupKey=destination_group,
+            body={'email': username + '@ocf.berkeley.edu'},
+        ).execute()
 
 
 class GoogleGroups(ldapsyncapp.LDAPSyncApp):
