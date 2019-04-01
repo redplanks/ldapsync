@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
-"""Takes a log file, and if not blank, emails its contents to root@."""
 import sys
 
 from ocflib.misc import mail
 
 
 if __name__ == '__main__':
-    file_contents = open(sys.argv[1], 'r').read()
-    if file_contents:
+    stdin_str = sys.stdin.read()
+    if stdin_str:
         mail.send_mail(
             mail.MAIL_ROOT,
             '[ldapsync] Problem report',
-            file_contents,
+            stdin_str,
             sender='ldapsync <root@ocf.berkeley.edu>',
         )
